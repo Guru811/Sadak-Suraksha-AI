@@ -2,6 +2,8 @@
 
 **From craters to clarity — mapping India's road damage with AI**
 
+🔗 **[Try the live demo](https://sadak-suraksha-ai.streamlit.app/)**
+
 An end-to-end road damage detection system for Indian road infrastructure. Upload a road photo or video (or capture one live via webcam) and get back damage classification, severity tagging, and an estimated repair cost.
 
 ## What it does
