@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Road Damage Detection</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil:wght@600;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- Signature element: animated lane-marking strip, also serves as the processing indicator -->
+    <div class="lane-strip" id="laneStrip" aria-hidden="true"></div>
+
+    <header class="gantry">
+        <div class="gantry-inner">
+            <span class="gantry-icon">⛙</span>
+            <h1>SADAK&nbsp;SURAKSHA<span class="stencil-gap">&nbsp;AI</span></h1>
+        </div>
+        <p class="gantry-tagline">From craters to clarity — mapping India's road damage with AI</p>
+        <p class="gantry-sub">Upload a road photo or clip — get damage type, severity and an estimated repair cost.</p>
+    </header>
+
+    <main class="layout">
+
+        <!-- ============ UPLOAD PANEL ============ -->
+        <section class="panel upload-panel">
+
+            <div class="tabs" role="tablist">
+                <button id="uploadTab" class="active" role="tab" aria-selected="true">Upload</button>
+                <button id="liveTab" role="tab" aria-selected="false">Live Webcam</button>
+            </div>
+
+            <div id="uploadSection" class="section">
+                <div id="dropZone" tabindex="0" role="button" aria-label="Upload a road image or video">
+                    <span class="drop-icon">＋</span>
+                    <p class="drop-label">Drop a photo or video</p>
+                    <p class="drop-sub">or click to browse</p>
+                    <input type="file" id="mediaUpload" accept="image/*,video/*" capture="environment" hidden>
+                </div>
+            </div>
+
+            <div id="liveSection" class="section hidden">
+                <video id="webcam" autoplay playsinline muted></video>
+                <canvas id="captureCanvas" hidden></canvas>
+                <button id="captureBtn" class="analyze-btn capture-btn">📸 Capture Photo</button>
+            </div>
+
+            <button id="predictBtn" class="analyze-btn">Analyze</button>
+        </section>
+
+        <!-- ============ RESULTS PANEL ============ -->
+        <section class="panel results-panel">
+
+            <div class="panel-head">
+                <h2>Detection Summary</h2>
+                <button id="downloadBtn" class="ghost-btn">Download report</button>
+            </div>
+
+            <div id="loader" class="loader hidden">
+                <span class="loader-dash"></span> Analyzing road surface…
+            </div>
+
+            <div id="emptyState" class="empty-state">
+                <p>No scan yet. Upload a road image or video and hit <strong>Analyze</strong>.</p>
+            </div>
+
+            <div id="resultsBody" class="results-body hidden">
+
+                <div class="sign-grid">
+                    <div class="sign-tile" data-code="D00">
+                        <span class="sign-label">Longitudinal Crack</span>
+                        <span class="sign-value" id="D00">0</span>
+                    </div>
+                    <div class="sign-tile" data-code="D10">
+                        <span class="sign-label">Transverse Crack</span>
+                        <span class="sign-value" id="D10">0</span>
+                    </div>
+                    <div class="sign-tile" data-code="D20">
+                        <span class="sign-label">Alligator Crack</span>
+                        <span class="sign-value" id="D20">0</span>
+                    </div>
+                    <div class="sign-tile" data-code="D40">
+                        <span class="sign-label">Pothole</span>
+                        <span class="sign-value" id="D40">0</span>
+                    </div>
+                    <div class="sign-tile full-width" data-code="OTHER">
+                        <span class="sign-label">Other Corruption</span>
+                        <span class="sign-value" id="OTHER">0</span>
+                    </div>
+                </div>
+
+                <div class="severity-row">
+                    <div class="severity-tag minor">
+                        <span class="dot"></span> Minor
+                        <span class="severity-count" id="MINOR">0</span>
+                    </div>
+                    <div class="severity-tag major">
+                        <span class="dot"></span> Major
+                        <span class="severity-count" id="MAJOR">0</span>
+                    </div>
+                </div>
+
+                <div class="cost-board">
+                    <span class="cost-label">Estimated Repair Cost</span>
+                    <span class="cost-value" id="COST">₹0</span>
+                    <span class="cost-caveat">Rough estimate from detected damage area — not a verified quote.</span>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <div id="outputWrap" class="output-wrap hidden">
+        <h2>Annotated Result</h2>
+        <div id="dropZoneOutput" class="output-media"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

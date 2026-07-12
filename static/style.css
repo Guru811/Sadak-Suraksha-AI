@@ -1,0 +1,469 @@
+/* =========================================================
+   DESIGN TOKENS
+   ========================================================= */
+:root {
+    --asphalt: #1c1d21;
+    --concrete: #2a2c32;
+    --concrete-light: #34363d;
+    --lane-yellow: #ffc93c;
+    --hazard-red: #e8483c;
+    --caution-amber: #f2a93b;
+    --chalk: #f4f5f7;
+    --chalk-dim: #a7abb4;
+    --border: #3d3f47;
+
+    --font-display: "Big Shoulders Stencil", sans-serif;
+    --font-body: "Inter", sans-serif;
+    --font-mono: "IBM Plex Mono", monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--asphalt);
+    background-image:
+        radial-gradient(circle at 15% 10%, rgba(255, 201, 60, 0.05), transparent 40%),
+        radial-gradient(circle at 85% 90%, rgba(232, 72, 60, 0.05), transparent 40%);
+    color: var(--chalk);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    padding-bottom: 48px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition: none !important; }
+}
+
+/* =========================================================
+   SIGNATURE: LANE-MARKING STRIP / PROCESSING INDICATOR
+   ========================================================= */
+.lane-strip {
+    height: 6px;
+    width: 100%;
+    background-image: repeating-linear-gradient(
+        90deg,
+        var(--lane-yellow) 0px, var(--lane-yellow) 28px,
+        transparent 28px, transparent 52px
+    );
+    background-size: 52px 100%;
+    opacity: 0.55;
+}
+
+.lane-strip.active {
+    animation: drive 0.9s linear infinite;
+    opacity: 1;
+}
+
+@keyframes drive {
+    from { background-position-x: 0; }
+    to   { background-position-x: -52px; }
+}
+
+/* =========================================================
+   HEADER / GANTRY
+   ========================================================= */
+.gantry {
+    padding: 40px 24px 24px;
+    text-align: center;
+}
+
+.gantry-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.gantry-icon {
+    font-size: 2rem;
+    color: var(--lane-yellow);
+}
+
+.gantry h1 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(2.2rem, 6.5vw, 4rem);
+    letter-spacing: 0.03em;
+    margin: 0;
+    color: var(--chalk);
+    text-transform: uppercase;
+}
+
+.stencil-gap { color: var(--lane-yellow); }
+
+.gantry-tagline {
+    color: var(--lane-yellow);
+    font-size: 1rem;
+    font-style: italic;
+    margin: 10px auto 0;
+    max-width: 480px;
+}
+
+.gantry-sub {
+    color: var(--chalk-dim);
+    font-size: 0.95rem;
+    margin: 6px auto 0;
+    max-width: 480px;
+}
+
+
+/* =========================================================
+   LAYOUT
+   ========================================================= */
+.layout {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 8px 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+@media (max-width: 800px) {
+    .layout { grid-template-columns: 1fr; padding: 8px 16px; }
+}
+
+.panel {
+    background: var(--concrete);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+}
+
+/* =========================================================
+   TABS
+   ========================================================= */
+.tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    background: var(--asphalt);
+    padding: 4px;
+    border-radius: 10px;
+}
+
+.tabs button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: transparent;
+    color: var(--chalk-dim);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.tabs button.active {
+    background: var(--lane-yellow);
+    color: var(--asphalt);
+}
+
+.tabs button:hover:not(.active) { color: var(--chalk); }
+
+.tabs button:focus-visible,
+button:focus-visible,
+#dropZone:focus-visible {
+    outline: 2px solid var(--lane-yellow);
+    outline-offset: 2px;
+}
+
+.hidden { display: none !important; }
+
+/* =========================================================
+   DROP ZONE
+   ========================================================= */
+#dropZone {
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+    background: var(--asphalt);
+}
+
+#dropZone:hover, #dropZone.drag-over {
+    border-color: var(--lane-yellow);
+    background: rgba(255, 201, 60, 0.05);
+}
+
+.drop-icon {
+    display: block;
+    font-size: 1.8rem;
+    color: var(--lane-yellow);
+    margin-bottom: 6px;
+}
+
+.drop-label {
+    margin: 0;
+    font-weight: 600;
+    color: var(--chalk);
+}
+
+.drop-sub {
+    margin: 4px 0 0;
+    font-size: 0.85rem;
+    color: var(--chalk-dim);
+}
+
+#dropZone img, #dropZone video {
+    width: 100%;
+    max-height: 240px;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+#webcam {
+    width: 100%;
+    max-height: 260px;
+    border-radius: 10px;
+    background: var(--asphalt);
+}
+
+.live-note {
+    color: var(--chalk-dim);
+    font-size: 0.85rem;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.capture-btn {
+    background: var(--hazard-red);
+    color: var(--chalk);
+}
+
+.capture-btn:hover { background: #f0564a; }
+
+/* =========================================================
+   ANALYZE BUTTON
+   ========================================================= */
+.analyze-btn {
+    width: 100%;
+    margin-top: 16px;
+    padding: 14px;
+    background: var(--lane-yellow);
+    color: var(--asphalt);
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.analyze-btn:hover { background: #ffd766; }
+.analyze-btn:active { transform: scale(0.98); }
+
+.ghost-btn {
+    padding: 8px 14px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--chalk-dim);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.ghost-btn:hover {
+    border-color: var(--lane-yellow);
+    color: var(--lane-yellow);
+}
+
+/* =========================================================
+   RESULTS PANEL
+   ========================================================= */
+.panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.panel-head h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.3rem;
+    letter-spacing: 0.02em;
+    margin: 0;
+    text-transform: uppercase;
+    color: var(--chalk);
+}
+
+.loader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--lane-yellow);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 10px 0;
+}
+
+.loader-dash {
+    width: 22px;
+    height: 3px;
+    background: var(--lane-yellow);
+    border-radius: 2px;
+    animation: pulse-dash 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-dash {
+    from { opacity: 0.3; width: 12px; }
+    to   { opacity: 1; width: 28px; }
+}
+
+.empty-state {
+    color: var(--chalk-dim);
+    font-size: 0.9rem;
+    padding: 30px 10px;
+    text-align: center;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+}
+
+.empty-state strong { color: var(--lane-yellow); }
+
+/* Sign grid (damage-type counters) */
+.sign-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.sign-tile {
+    background: var(--asphalt);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--lane-yellow);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sign-tile.full-width { grid-column: span 2; flex-direction: row; align-items: center; justify-content: space-between; }
+
+.sign-label {
+    font-size: 0.75rem;
+    color: var(--chalk-dim);
+    font-weight: 500;
+}
+
+.sign-value {
+    font-family: var(--font-mono);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--chalk);
+}
+
+/* Severity tags */
+.severity-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.severity-tag {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    background: var(--asphalt);
+    border: 1px solid var(--border);
+}
+
+.severity-tag .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+
+.severity-tag.minor .dot { background: var(--caution-amber); }
+.severity-tag.major .dot { background: var(--hazard-red); }
+
+.severity-count {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+}
+
+/* Cost board — the "toll display" readout */
+.cost-board {
+    margin-top: 16px;
+    background: #14151a;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+}
+
+.cost-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--chalk-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+}
+
+.cost-value {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 2.1rem;
+    font-weight: 600;
+    color: var(--lane-yellow);
+    text-shadow: 0 0 14px rgba(255, 201, 60, 0.35);
+}
+
+.cost-caveat {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--chalk-dim);
+    margin-top: 8px;
+}
+
+/* =========================================================
+   ANNOTATED OUTPUT
+   ========================================================= */
+.output-wrap {
+    max-width: 1040px;
+    margin: 24px auto 0;
+    padding: 0 24px;
+}
+
+.output-wrap h2 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    color: var(--chalk-dim);
+    margin-bottom: 10px;
+}
+
+.output-media {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--concrete);
+}
+
+.output-media img, .output-media video {
+    display: block;
+    max-width: 960px;
+    max-height: 640px;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+}
